@@ -1,0 +1,21 @@
+{
+  "name": "rxn-assignment",
+  "authors": [
+    "nguyen pham <nguyenpvdtu@gmail.com>"
+  ],
+  "description": "a test for candidate",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "libs"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "jquery": "^3.3.1"
+  }
+}

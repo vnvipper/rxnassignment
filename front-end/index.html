@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>RXN - Assignment</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="libs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="css/style.css" rel="stylesheet">
+
+</head>
+
+<body>
+  <header id="page-header">
+    <h1 class="main-title text-center">PRODUCT MASTER SHEET</h1>
+    <div class="container-fluid">
+      <form action="" method="POST" role="form" class="form-horizontal">
+        <fieldset class="bs3-fieldset">
+          <legend class="bs3-legend">Product Master</legend>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="control-label col-md-3" for="productNumber">Product Number</label>
+                <div class="col-md-5">
+                  <input type="text" class="form-control" id="productNumber" name="productNumber">
+                </div>
+                <label class="control-label col-md-2" for="packSize">Pack Size:</label>
+                <div class="col-md-2">
+                  <input type="email" class="form-control" id="packSize" name="packSize">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-3" for="productDesc">Description</label>
+                <div class="col-md-9">
+                  <textarea name="productDesc" id="productDesc" rows="10" class="form-control"></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <fieldset class="bs3-fieldset">
+                <legend class="bs3-legend">Product Image</legend>
+                <div class="form-group">
+                  <div class="col-md-6">
+                    <div class="img-container">
+                        <img src="img/placeholder.png" alt="product image" class="img-responsive img-centered">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <button type="button" class="btn btn-block btn-default" id="btn-browser">Browser Logo</button>
+                    <button type="button" class="btn btn-block btn-warning" id="btn-clear">Discard Logo</button>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+
+    </div>
+  </header>
+  <section id="page-body" class="container-fluid">
+    <ul class="nav nav-tabs nav-justified">
+      <li class="active">
+        <a data-toggle="tab" href="#basic-info">Basic Infomation</a>
+      </li>
+      <li>
+        <a data-toggle="tab" href="#inventory">Inventory</a>
+      </li>
+    </ul>
+
+    <div class="tab-content site-tab-cotent">
+      <div id="basic-info" class="tab-pane fade in active">
+        <form action="" method="POST" role="form" class="form-horizontal">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <div class="col-md-12">
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox">Hazardous Material?
+                    </label>
+                  </div>
+                </div>
+
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-4" for="costCenterCode">Cost Center Code</label>
+                <div class="col-md-8">
+                  <input type="text" class="form-control" id="costCenterCode" name="costCenterCode">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-4" for="expirationDate">Expiration Date</label>
+                <div class="col-md-8">
+                  <input type="text" class="form-control" id="expirationDate" name="expirationDate">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-4" for="unitPrice">Unit Price</label>
+                <div class="col-md-8">
+                  <input type="text" class="form-control" id="unitPrice" name="unitPrice">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="control-label col-md-4" for="width">Width</label>
+                <div class="col-md-8">
+                  <input type="text" class="form-control" id="width" name="width">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-4" for="length">Length</label>
+                <div class="col-md-8">
+                  <input type="text" class="form-control" id="length" name="length">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-4" for="height">height</label>
+                <div class="col-md-8">
+                  <input type="text" class="form-control" id="height" name="height">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-4" for="cube">Cube</label>
+                <div class="col-md-8">
+                  <input type="text" class="form-control" id="cube" name="cube">
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-md-4">
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox">Pre-Pack
+                    </label>
+                  </div>
+                </div>
+                <div class="col-md-8">
+                  <input type="text" class="form-control" id="prePack" name="prePack">
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div id="inventory" class="tab-pane fade">
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr class="active">
+                <th>Location</th>
+                <th>On-Hand</th>
+                <th>On-Hand Pcs</th>
+                <th>Allocated</th>
+                <th>Allocated Pcs</th>
+                <th>Available</th>
+                <th>Available Pcs</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>CET</td>
+                <td>10</td>
+                <td>120</td>
+                <td>3</td>
+                <td>36</td>
+                <td>7</td>
+                <td>84</td>
+              </tr>
+              <tr>
+                <td>SEA</td>
+                <td>20</td>
+                <td>240</td>
+                <td>10</td>
+                <td>120</td>
+                <td>10</td>
+                <td>120</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr class="warning">
+                <td>ALL SITE</td>
+                <td>30</td>
+                <td>360</td>
+                <td>13</td>
+                <td>156</td>
+                <td>17</td>
+                <td>224</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer id="page-footer" class="container-fluid">
+    <div class="align-wrapper">
+        <button class="btn btn-primary"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
+    </div>
+  </footer>
+  <!-- Bootstrap core JavaScript -->
+  <script src="libs/jquery/dist/jquery.min.js"></script>
+  <script src="libs/bootstrap/dist/js/bootstrap.min.js"></script>
+
+  <!-- Custom scripts for this template -->
+  <script src="js/script.js"></script>
+
+</body>
+
+</html>
