@@ -12,7 +12,10 @@
 
   <!-- Bootstrap core CSS -->
   <link href="libs/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-
+  <link rel="stylesheet" href="libs/select2/dist/css/select2.min.css">
+  <!-- The link to the CSS that the grid needs -->
+  <link href="libs/jqGrid/css/ui.jqgrid-bootstrap.css" rel="stylesheet">
+  <link href="libs/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css" rel="stylesheet">
   <!-- Custom styles for this template -->
   <link href="css/style.css" rel="stylesheet">
 
@@ -30,17 +33,19 @@
               <div class="form-group">
                 <label class="control-label col-md-3" for="productNumber">Product Number</label>
                 <div class="col-md-5">
-                  <input type="text" class="form-control" id="productNumber" name="productNumber">
+                  <select name="productNumber" id="productNumber" class="form-control site-select" required="required">
+                    <option></option>
+                  </select>
                 </div>
                 <label class="control-label col-md-2" for="packSize">Pack Size:</label>
                 <div class="col-md-2">
-                  <input type="email" class="form-control" id="packSize" name="packSize">
+                  <input type="number" class="form-control" id="packSize" name="packSize" placeholder="0">
                 </div>
               </div>
               <div class="form-group">
-                <label class="control-label col-md-3" for="productDesc">Description</label>
+                <label class="control-label col-md-3" for="description">Description</label>
                 <div class="col-md-9">
-                  <textarea name="productDesc" id="productDesc" rows="10" class="form-control"></textarea>
+                  <textarea name="description" id="description" rows="10" class="form-control"></textarea>
                 </div>
               </div>
             </div>
@@ -48,9 +53,11 @@
               <fieldset class="bs3-fieldset">
                 <legend class="bs3-legend">Product Image</legend>
                 <div class="form-group">
+                  <input type="file" name="inputfile" id="inputfile" class="inputfile" />
                   <div class="col-md-6">
                     <div class="img-container">
-                        <img src="img/placeholder.png" alt="product image" class="img-responsive img-centered">
+                      <img src="img/placeholder.png" alt="product image" id="imagePreview" class="img-responsive img-centered">
+                      <input type="hidden" name="productImage" id="productImage">
                     </div>
                   </div>
                   <div class="col-md-6">
@@ -72,7 +79,7 @@
         <a data-toggle="tab" href="#basic-info">Basic Infomation</a>
       </li>
       <li>
-        <a data-toggle="tab" href="#inventory">Inventory</a>
+        <a id="grid-link" data-toggle="tab" href="#inventory" data-master-id=''>Inventory</a>
       </li>
     </ul>
 
@@ -85,7 +92,7 @@
                 <div class="col-md-12">
                   <div class="checkbox">
                     <label>
-                      <input type="checkbox">Hazardous Material?
+                      <input id="isHazardousMaterial" name="isHazardousMaterial" type="checkbox">Hazardous Material?
                     </label>
                   </div>
                 </div>
@@ -94,19 +101,24 @@
               <div class="form-group">
                 <label class="control-label col-md-4" for="costCenterCode">Cost Center Code</label>
                 <div class="col-md-8">
-                  <input type="text" class="form-control" id="costCenterCode" name="costCenterCode">
+                  <input type="number" class="form-control" id="costCenterCode" name="costCenterCode" placeholder="0">
                 </div>
               </div>
               <div class="form-group">
                 <label class="control-label col-md-4" for="expirationDate">Expiration Date</label>
                 <div class="col-md-8">
-                  <input type="text" class="form-control" id="expirationDate" name="expirationDate">
+                  <div class="input-group date" data-provide="datepicker" data-date-autoclose="true">
+                    <input type="text" class="form-control datepicker" id="expirationDate" name="expirationDate" placeholder="MM/dd/yyyy">
+                    <div class="input-group-addon">
+                      <span class="glyphicon glyphicon-th"></span>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="form-group">
                 <label class="control-label col-md-4" for="unitPrice">Unit Price</label>
                 <div class="col-md-8">
-                  <input type="text" class="form-control" id="unitPrice" name="unitPrice">
+                  <input type="number" class="form-control" id="unitPrice" name="unitPrice" step="0.01" min="0" placeholder="0.00">
                 </div>
               </div>
             </div>
@@ -114,37 +126,42 @@
               <div class="form-group">
                 <label class="control-label col-md-4" for="width">Width</label>
                 <div class="col-md-8">
-                  <input type="text" class="form-control" id="width" name="width">
+                  <input type="number" class="form-control" id="width" name="width" step="0.01" min="0" placeholder="0.00">
                 </div>
               </div>
               <div class="form-group">
                 <label class="control-label col-md-4" for="length">Length</label>
                 <div class="col-md-8">
-                  <input type="text" class="form-control" id="length" name="length">
+                  <input type="number" class="form-control" id="length" name="length" step="0.01" min="0" placeholder="0.00">
                 </div>
               </div>
               <div class="form-group">
-                <label class="control-label col-md-4" for="height">height</label>
+                <label class="control-label col-md-4" for="height">Height</label>
                 <div class="col-md-8">
-                  <input type="text" class="form-control" id="height" name="height">
+                  <input type="number" class="form-control" id="height" name="height" step="0.01" min="0" placeholder="0.00">
                 </div>
               </div>
               <div class="form-group">
                 <label class="control-label col-md-4" for="cube">Cube</label>
                 <div class="col-md-8">
-                  <input type="text" class="form-control" id="cube" name="cube">
+                  <input type="number" class="form-control" id="cube" name="cube" readonly step="0.01" min="0" placeholder="0.00">
                 </div>
               </div>
               <div class="form-group">
                 <div class="col-md-4">
                   <div class="checkbox">
                     <label>
-                      <input type="checkbox">Pre-Pack
+                      <input type="checkbox" name="isPrePack" id="isPrePack">Pre-Pack
                     </label>
                   </div>
                 </div>
                 <div class="col-md-8">
-                  <input type="text" class="form-control" id="prePack" name="prePack">
+
+                  <select class="form-control" id="prePack" name="prePack">
+                    <option></option>
+                    <option value="Soft Style">Soft Style</option>
+                    <option value="Solid Style">Solid Style</option>                  
+                  </select>
                 </div>
               </div>
             </div>
@@ -152,7 +169,7 @@
         </form>
       </div>
       <div id="inventory" class="tab-pane fade">
-        <div class="table-responsive">
+        <!-- <div class="table-responsive">
           <table class="table table-bordered">
             <thead>
               <tr class="active">
@@ -197,20 +214,28 @@
               </tr>
             </tfoot>
           </table>
-        </div>
+        </div> -->
+        <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
       </div>
     </div>
   </section>
 
   <footer id="page-footer" class="container-fluid">
     <div class="align-wrapper">
-        <button class="btn btn-primary"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
+      <button class="btn btn-primary">
+        <span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
     </div>
   </footer>
   <!-- Bootstrap core JavaScript -->
   <script src="libs/jquery/dist/jquery.min.js"></script>
+  <!-- We support more than 40 localizations -->
+  <script type="text/ecmascript" src="libs/jqGrid/js/i18n/grid.locale-en.js"></script>
+  <!-- This is the Javascript file of jqGrid -->
+  <script type="text/ecmascript" src="libs/jqGrid/js/jquery.jqGrid.js"></script>
   <script src="libs/bootstrap/dist/js/bootstrap.min.js"></script>
-
+  <script src="libs/select2/dist/js/select2.min.js"></script>
+  <script src="libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
   <!-- Custom scripts for this template -->
   <script src="js/script.js"></script>
 

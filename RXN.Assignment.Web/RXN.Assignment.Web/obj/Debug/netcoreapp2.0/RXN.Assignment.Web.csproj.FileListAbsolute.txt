@@ -3,9 +3,9 @@ E:\RXNAssignment\RXN.Assignment.Web\RXN.Assignment.Web\bin\Debug\netcoreapp2.0\R
 E:\RXNAssignment\RXN.Assignment.Web\RXN.Assignment.Web\bin\Debug\netcoreapp2.0\RXN.Assignment.Web.runtimeconfig.dev.json
 E:\RXNAssignment\RXN.Assignment.Web\RXN.Assignment.Web\bin\Debug\netcoreapp2.0\RXN.Assignment.Web.dll
 E:\RXNAssignment\RXN.Assignment.Web\RXN.Assignment.Web\bin\Debug\netcoreapp2.0\RXN.Assignment.Web.pdb
-E:\RXNAssignment\RXN.Assignment.Web\RXN.Assignment.Web\obj\Debug\netcoreapp2.0\RXN.Assignment.Web.csprojResolveAssemblyReference.cache
 E:\RXNAssignment\RXN.Assignment.Web\RXN.Assignment.Web\obj\Debug\netcoreapp2.0\RXN.Assignment.Web.csproj.CoreCompileInputs.cache
 E:\RXNAssignment\RXN.Assignment.Web\RXN.Assignment.Web\obj\Debug\netcoreapp2.0\RXN.Assignment.Web.AssemblyInfoInputs.cache
 E:\RXNAssignment\RXN.Assignment.Web\RXN.Assignment.Web\obj\Debug\netcoreapp2.0\RXN.Assignment.Web.AssemblyInfo.cs
 E:\RXNAssignment\RXN.Assignment.Web\RXN.Assignment.Web\obj\Debug\netcoreapp2.0\RXN.Assignment.Web.dll
 E:\RXNAssignment\RXN.Assignment.Web\RXN.Assignment.Web\obj\Debug\netcoreapp2.0\RXN.Assignment.Web.pdb
+E:\RXNAssignment\RXN.Assignment.Web\RXN.Assignment.Web\obj\Debug\netcoreapp2.0\RXN.Assignment.Web.csprojResolveAssemblyReference.cache
