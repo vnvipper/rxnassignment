@@ -26,8 +26,8 @@ namespace RXN.Assignment.Web.Models
 
         [Display(Name = "Cost Center Code")]
         [Required]
-        [RegularExpression(@"^\d{8}$", ErrorMessage = "Invalid format. Correct format is ####-##-##")]
-        public int CostCenterCode { get; set; }
+        [RegularExpression(@"^[0-9]{4}-[0-9]{2}-[0-9]{2}$", ErrorMessage = "Invalid format. Correct format is ####-##-##")]
+        public string CostCenterCode { get; set; }
 
         [Display(Name = "Expiration Date")]
         [Required]

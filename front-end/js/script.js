@@ -7,20 +7,9 @@
             $('#productNumber').select2({
                 placeholder: "Select a Product Number",
                 tags: true,
-                tokenSeparators: [",", " "]
-            }).on("change", function (e) {
-                var isNew = $(this).find('[data-select2-tag="true"]');
-                if (isNew.length) {
-                    var r = confirm("do you want to create a tag?");
-                    if (r == true) {
-                        isNew.replaceWith('<option selected value="' + isNew.val() + '">' + isNew.val() + '</option>');
-                    } else {
-                        $('.select2-selection__choice:last').remove();
-                        $('.select2-search__field').val(isNew.val()).focus()
-                    }
-                }
+                tokenSeparators: [",", " "],
+                allowClear: true
             });
-
             $('#prePack').select2({
                 placeholder: "Select a prepack",
                 allowClear: true
@@ -35,77 +24,37 @@
         }
     }
 
-    // var masterItem = {};
+    var ajaxHandler = function(url, type, data, successCallback, failCallback){
+        $.ajax({
+            type: type,
+            accepts: 'application/json',
+            url: url,
+            contentType: 'application/json',
+            data: data ? JSON.stringify(data) : null,
+        })
+        .done(successCallback)
+        .fail(function (jqXHR, textStatus, errorThrown) {
+            if(jqXHR.status == 400) {
+                var errors = jqXHR.responseJSON;
+                var template = '<ul>';
+                $.each(errors, function( property, data ) {
+                    template += '<li>';
+                    template += property + ': ' + data; 
+                    template += '</li>';
+                });
+                template = template + '</ul>';
+                toastr.error(template);
+            }
+            else
+            {
+                toastr.warning(errorThrown);
+            }
 
-    // var masterItemController = {
-    //     url: apiUrl + 'Master',
-    //     getAll: function (productNumber) {
-    //         var masterUri = this.url;
-    //         $.ajax({
-    //             type: 'get',
-    //             url: masterUri,
-    //             dataType: 'json',
-    //             contentType: 'application/json',
-    //         })
-    //         .done(function (data) {
-    //             // console.log(data);
-    //             // masterItem = data;
-    //             return masterItem;
-    //         })
-    //         .fail(function (jqXHR, textStatus, errorThrown) {
-    //             alert(errorThrown);
-    //         });        
-    //     },
-    //     get: function (productNumber) {
-    //         var masterUri = this.url + '/' + productNumber;
-    //         $.ajax({
-    //             type: 'get',
-    //             url: masterUri,
-    //             dataType: 'json',
-    //             contentType: 'application/json',
-    //         })
-    //         .done(function (data) {
-    //             console.log(data);
-    //             masterItem = data;
-    //             // return masterItem;
-    //         })
-    //         .fail(function (jqXHR, textStatus, errorThrown) {
-    //             alert(errorThrown);
-    //         });        
-    //     },
-    //     add: function(item){
-    //         var masterUri = url;
-    //         $.ajax({
-    //             type: 'post',
-    //             url: masterUri,
-    //             dataType: 'json',
-    //             contentType: 'application/json',
-    //             data: item ? JSON.stringify(item) : null
-    //         })
-    //         .done(function (data) {
-    //             console.log(data);
-    //         })
-    //         .fail(function (jqXHR, textStatus, errorThrown) {
-    //             alert(errorThrown);
-    //         });
-    //     },
-    //     edit: function(item){
-    //         var masterUri = url;
-    //         $.ajax({
-    //             type: 'push',
-    //             url: masterUri,
-    //             dataType: 'json',
-    //             contentType: 'application/json',
-    //             data: item ? JSON.stringify(item) : null
-    //         })
-    //         .done(function (data) {
-    //             console.log(data);
-    //         })
-    //         .fail(function (jqXHR, textStatus, errorThrown) {
-    //             alert(errorThrown);
-    //         });
-    //     },
-    // };
+            if(failCallback){
+                failCallback();
+            }
+        });
+    }
 
     var imageHandler = {
         init: function () {
@@ -206,7 +155,7 @@
                 }).trigger("reloadGrid");
             }
         }
-    }
+    } 
 
     var siteHandler = {
         init: function () {
@@ -222,68 +171,60 @@
             self.loadProductNumber();
             self.onSelectedProductNumber();
             self.onClickInventoryTab();
+            self.onSaveClick();
+            self.caculateCube();
         },
         loadProductNumber: function () {
-            var masterItemUri = siteUri + 'Master';
-            $.ajax({
-                    type: 'get',
-                    url: masterItemUri,
-                    dataType: 'json',
-                    contentType: 'application/json',
-                })
-                .done(function (data) {
-                    $('#productNumber').val(null).trigger('change');
-                    $.each(data, function (key, value) {
-                        var newOption = new Option(value.productNumber, value.productNumber, false, false);
-                        $('#productNumber').append(newOption).trigger('change');
-                    });
-                })
-                .fail(function (jqXHR, textStatus, errorThrown) {
-                    alert(errorThrown);
+            var dataUrl = siteUri + 'Master';
+            ajaxHandler(dataUrl,'get', null, function (data) {
+                $('#productNumber').val(null).trigger('change');
+                $.each(data, function (key, value) {
+                    var newOption = new Option(value, value, false, false);
+                    $('#productNumber').append(newOption).trigger('change');
                 });
+            });
         },
         onSelectedProductNumber: function () {
             $('#productNumber').on('select2:select', function (e) {
-                var masterItemUri = siteUri + 'Master' + '/' + $(this).val();
-                $.ajax({
-                        type: 'get',
-                        url: masterItemUri,
-                        dataType: 'json',
-                        contentType: 'application/json',
-                    })
-                    .done(function (data) {
-                        // Select tab by name
-                        $('.nav-tabs a[href="#basic-info"]').tab('show')
-                        $('#grid-link').attr('data-master-id', data.productNumber);
-                        $('#packSize').val(data.packSize);
-                        $('#description').val(data.description);
+                var dataUrl = siteUri + 'Master' + '/' + $(this).val();
+                ajaxHandler(dataUrl, 'get', null, function (data) {
+                    // Select tab by name
+                    $('.nav-tabs a[href="#basic-info"]').tab('show')
+                    $('#grid-link').attr('data-master-id', data.productNumber);
+                    $('#packSize').val(data.packSize);
+                    $('#description').val(data.description);
 
-                        if (data.productImage) {
-                            $('#productImage').val(data.productImage);
-                            $('#imagePreview').attr('src', data.imagePreview);
-                        } else {
-                            var defaultImage = './img/placeholder.png';
-                            $('#imagePreview').attr('src', defaultImage);
-                        }
+                    if (data.productImage) {
+                        $('#productImage').val(data.productImage);
+                        $('#imagePreview').attr('src', data.imagePreview);
+                    } else {
+                        var defaultImage = './img/placeholder.png';
+                        $('#imagePreview').attr('src', defaultImage);
+                    }
 
-                        $('#isHazardousMaterial').prop("checked", data.isHazardousMaterial);
+                    $('#isHazardousMaterial').prop("checked", data.isHazardousMaterial);
 
-                        $('#costCenterCode').val(data.costCenterCode);
-                        $('#expirationDate').val(data.expirationDate);
-                        $('#unitPrice').val(data.unitPrice);
-                        $('#width').val(data.width);
-                        $('#length').val(data.length);
-                        $('#height').val(data.height);
-                        $('#cube').val(data.cube);
-                        $('#isPrePack').prop("checked", data.isPrePack);
-                        $('#isPrePack').trigger('change');
-                        $('#prePack').val(data.prePack);
-                        $('#prePack').trigger('change');
-
-                    })
-                    .fail(function (jqXHR, textStatus, errorThrown) {
-                        alert(errorThrown);
-                    });
+                    $('#costCenterCode').val(data.costCenterCode);
+                    $('#expirationDate').val(data.expirationDate);
+                    $('#unitPrice').val(data.unitPrice);
+                    $('#width').val(data.width);
+                    $('#length').val(data.length);
+                    $('#height').val(data.height);
+                    $('#cube').val(data.cube);
+                    $('#isPrePack').prop("checked", data.isPrePack);
+                    $('#isPrePack').trigger('change');
+                    $('#prePack').val(data.prePack);
+                    $('#prePack').trigger('change');
+                }, function(){
+                    $('#packSize').val(null);
+                    $('#description').val(null);
+                    $('#productImage').val(null);
+                    var defaultImage = './img/placeholder.png';
+                    $('#imagePreview').attr('src', defaultImage);
+                    $("#detail-form").get(0).reset();
+                    $('#isPrePack').trigger('change');
+                    $('#prePack').trigger('change');
+                });            
             });
         },
         onClickInventoryTab: function () {
@@ -294,6 +235,68 @@
                     jqueryGridHandler.reload();
                 }
             });
+        },
+        onSaveClick: function () {
+            $('#btn-save').on('click', function () {
+
+                var data = {
+                    "productNumber": $('#productNumber').val(),
+                    "packSize": $('#packSize').val(),
+                    "description": $('#description').val(),
+                    "productImage": $('#productImage').val(),
+                    "isHazardousMaterial": $('#isHazardousMaterial').prop("checked"),
+                    "costCenterCode": $('#costCenterCode').val(),
+                    "expirationDate": $('#expirationDate').val(),
+                    "unitPrice": $('#unitPrice').val(),
+                    "width": $('#width').val(),
+                    "length": $('#length').val(),
+                    "height": $('#height').val(),
+                    "isPrePack": $('#isPrePack').prop("checked"),
+                    "prePack": $('#prePack').val(),
+                };
+
+                var isNewElement = $('#productNumber').find('[data-select2-tag="true"]');
+                if (isNewElement.length) {
+                    var dataUrl = siteUri + 'Master';                   
+                    ajaxHandler(dataUrl, 'post', data, function (data) {
+                        toastr.success("update success");
+                        $('#productNumber').val(null).trigger('change');
+                        var newOption = new Option(data.productNumber, data.productNumber, false, false);
+                        $('#productNumber').append(newOption).trigger('change');                          
+                        $('#packSize').val(null);
+                        $('#description').val(null);
+                        $('#productImage').val(null);
+                        var defaultImage = './img/placeholder.png';
+                        $('#imagePreview').attr('src', defaultImage);
+                        $("#detail-form").get(0).reset();
+                        $('#isPrePack').trigger('change');
+                        $('#prePack').trigger('change');
+                    });                   
+                } else {
+                    var dataUrl = siteUri + 'Master' + '/'+ $('#productNumber').val();
+                    ajaxHandler(dataUrl, 'PUT', data, function (data) {
+                        toastr.success("update success");
+                    });                 
+                }
+            });
+
+        },
+        caculateCube: function(){
+            $('#width, #length, #height').on('keyup', function(){
+                var width = $('#width').val();
+                var widthValue = width ? parseFloat(width).toFixed(3) : parseFloat(0).toFixed(3);
+               
+                var length = $('#length').val();
+                var lengthValue = length ? parseFloat(length).toFixed(3) : parseFloat(0).toFixed(3);
+
+                var height = $('#height').val();
+                var heightValue = height ? parseFloat(height).toFixed(3) : parseFloat(0).toFixed(3);
+
+                var cubeValue = widthValue * lengthValue * heightValue;
+
+                $('#cube').val(parseFloat(cubeValue).toFixed(3));
+
+            });
         }
     }
 
@@ -303,7 +306,7 @@
     $(document).ready(function () {
         pluginHandler.init();
         imageHandler.init();
-        siteHandler.init();
+        siteHandler.init(); 
     });
 
 })(jQuery, window, document);

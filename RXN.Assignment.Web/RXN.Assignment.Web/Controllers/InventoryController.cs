@@ -46,7 +46,7 @@ namespace RXN.Assignment.Web.Controllers
             int pageIndex = Convert.ToInt32(page) - 1;
             int pageSize = rows;
 
-            var results = _context.ItemMasterInventory.Select(
+            var results = _context.ItemMasterInventory.Where(m=>m.ImiitemMasterIdFk == masterId).Select(
                 m => new InventoryItemDto
                 {
                     Id = m.ItemMasterInventoryIdPk,

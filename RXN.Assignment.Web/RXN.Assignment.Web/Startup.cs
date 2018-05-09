@@ -53,7 +53,7 @@ namespace RXN.Assignment.Web
             {
                 app.UseDeveloperExceptionPage();
             }
-
+        
             app.UseCors("CorsPolicy");
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
@@ -62,7 +62,9 @@ namespace RXN.Assignment.Web
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "RXN API V1");
+                c.RoutePrefix = string.Empty;
             });
+
 
             app.UseMvc();
         }

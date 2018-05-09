@@ -1,0 +1,14 @@
+{
+  "name": "jquery-mask-number",
+  "homepage": "https://github.com/normandesjr/jquery-mask-number",
+  "_release": "73d46da425",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "73d46da425769de88fab6c12b191709d7e589ebf"
+  },
+  "_source": "https://github.com/normandesjr/jquery-mask-number.git",
+  "_target": "*",
+  "_originalSource": "https://github.com/normandesjr/jquery-mask-number.git",
+  "_direct": true
+}

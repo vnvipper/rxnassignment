@@ -16,6 +16,7 @@
   <!-- The link to the CSS that the grid needs -->
   <link href="libs/jqGrid/css/ui.jqgrid-bootstrap.css" rel="stylesheet">
   <link href="libs/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="libs/toastr/toastr.min.css">
   <!-- Custom styles for this template -->
   <link href="css/style.css" rel="stylesheet">
 
@@ -25,7 +26,7 @@
   <header id="page-header">
     <h1 class="main-title text-center">PRODUCT MASTER SHEET</h1>
     <div class="container-fluid">
-      <form action="" method="POST" role="form" class="form-horizontal">
+      <form id="master-form" action="" method="POST" role="form" class="form-horizontal">
         <fieldset class="bs3-fieldset">
           <legend class="bs3-legend">Product Master</legend>
           <div class="row">
@@ -85,7 +86,7 @@
 
     <div class="tab-content site-tab-cotent">
       <div id="basic-info" class="tab-pane fade in active">
-        <form action="" method="POST" role="form" class="form-horizontal">
+        <form id="detail-form" action="" method="POST" role="form" class="form-horizontal">
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
@@ -101,7 +102,7 @@
               <div class="form-group">
                 <label class="control-label col-md-4" for="costCenterCode">Cost Center Code</label>
                 <div class="col-md-8">
-                  <input type="number" class="form-control" id="costCenterCode" name="costCenterCode" placeholder="0">
+                  <input type="text" class="form-control" data-mask="0000-00-00" id="costCenterCode" name="costCenterCode" placeholder="####-##-##">
                 </div>
               </div>
               <div class="form-group">
@@ -118,7 +119,7 @@
               <div class="form-group">
                 <label class="control-label col-md-4" for="unitPrice">Unit Price</label>
                 <div class="col-md-8">
-                  <input type="number" class="form-control" id="unitPrice" name="unitPrice" step="0.01" min="0" placeholder="0.00">
+                  <input type="number" class="form-control two-places" id="unitPrice" name="unitPrice" step="0.01" min="0" placeholder="0.00">
                 </div>
               </div>
             </div>
@@ -126,25 +127,25 @@
               <div class="form-group">
                 <label class="control-label col-md-4" for="width">Width</label>
                 <div class="col-md-8">
-                  <input type="number" class="form-control" id="width" name="width" step="0.01" min="0" placeholder="0.00">
+                  <input type="number" class="form-control two-places" id="width" name="width" step="0.01" min="0" placeholder="0.00">
                 </div>
               </div>
               <div class="form-group">
                 <label class="control-label col-md-4" for="length">Length</label>
                 <div class="col-md-8">
-                  <input type="number" class="form-control" id="length" name="length" step="0.01" min="0" placeholder="0.00">
+                  <input type="number" class="form-control two-places" id="length" name="length" step="0.01" min="0" placeholder="0.00">
                 </div>
               </div>
               <div class="form-group">
                 <label class="control-label col-md-4" for="height">Height</label>
                 <div class="col-md-8">
-                  <input type="number" class="form-control" id="height" name="height" step="0.01" min="0" placeholder="0.00">
+                  <input type="number" class="form-control two-places" id="height" name="height" step="0.01" min="0" placeholder="0.00">
                 </div>
               </div>
               <div class="form-group">
                 <label class="control-label col-md-4" for="cube">Cube</label>
                 <div class="col-md-8">
-                  <input type="number" class="form-control" id="cube" name="cube" readonly step="0.01" min="0" placeholder="0.00">
+                  <input type="number" class="form-control" id="cube" name="cube" readonly step="0.001" min="0">
                 </div>
               </div>
               <div class="form-group">
@@ -156,11 +157,10 @@
                   </div>
                 </div>
                 <div class="col-md-8">
-
                   <select class="form-control" id="prePack" name="prePack">
                     <option></option>
                     <option value="Soft Style">Soft Style</option>
-                    <option value="Solid Style">Solid Style</option>                  
+                    <option value="Solid Style">Solid Style</option>
                   </select>
                 </div>
               </div>
@@ -169,52 +169,6 @@
         </form>
       </div>
       <div id="inventory" class="tab-pane fade">
-        <!-- <div class="table-responsive">
-          <table class="table table-bordered">
-            <thead>
-              <tr class="active">
-                <th>Location</th>
-                <th>On-Hand</th>
-                <th>On-Hand Pcs</th>
-                <th>Allocated</th>
-                <th>Allocated Pcs</th>
-                <th>Available</th>
-                <th>Available Pcs</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>CET</td>
-                <td>10</td>
-                <td>120</td>
-                <td>3</td>
-                <td>36</td>
-                <td>7</td>
-                <td>84</td>
-              </tr>
-              <tr>
-                <td>SEA</td>
-                <td>20</td>
-                <td>240</td>
-                <td>10</td>
-                <td>120</td>
-                <td>10</td>
-                <td>120</td>
-              </tr>
-            </tbody>
-            <tfoot>
-              <tr class="warning">
-                <td>ALL SITE</td>
-                <td>30</td>
-                <td>360</td>
-                <td>13</td>
-                <td>156</td>
-                <td>17</td>
-                <td>224</td>
-              </tr>
-            </tfoot>
-          </table>
-        </div> -->
         <table id="jqGrid"></table>
         <div id="jqGridPager"></div>
       </div>
@@ -223,7 +177,7 @@
 
   <footer id="page-footer" class="container-fluid">
     <div class="align-wrapper">
-      <button class="btn btn-primary">
+      <button type="button" id="btn-save" class="btn btn-primary">
         <span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
     </div>
   </footer>
@@ -236,6 +190,8 @@
   <script src="libs/bootstrap/dist/js/bootstrap.min.js"></script>
   <script src="libs/select2/dist/js/select2.min.js"></script>
   <script src="libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+  <script src="libs/toastr/toastr.min.js"></script>
+  <script src="libs/jquery-mask-plugin/dist/jquery.mask.min.js"></script>
   <!-- Custom scripts for this template -->
   <script src="js/script.js"></script>
 

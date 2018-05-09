@@ -24,9 +24,9 @@ namespace RXN.Assignment.Web.Controllers
 
         // GET: api/Master
         [HttpGet]
-        public IEnumerable<MasterItemDto> GetItemMaster()
+        public IEnumerable<int> GetItemMaster()
         {
-            return _context.ItemMaster.Select(DataToModel);
+            return _context.ItemMaster.Select(m=>m.ItemMasterIdPk);
         }
 
         // GET: api/Master/5
@@ -48,52 +48,6 @@ namespace RXN.Assignment.Web.Controllers
             var model = DataToModel(itemMaster);
 
             return Ok(model);
-        }
-
-        private MasterItemDto DataToModel(ItemMaster itemMaster)
-        {
-            var model = new MasterItemDto
-            {
-                ProductNumber = itemMaster.ItemMasterIdPk,
-                PackSize = itemMaster.Impack,
-                Description = itemMaster.Imdescription,
-                ProductImage = itemMaster.ImimageData != null
-                    ? Convert.ToBase64String(itemMaster.ImimageData, 0, itemMaster.ImimageData.Length)
-                    : null,
-                IsHazardousMaterial = itemMaster.ImisHazardousMaterial,
-                ExpirationDate = itemMaster.ImexpirationDate.ToString("MM/dd/yyyy"),
-                CostCenterCode = itemMaster.ImcostCenterCode,
-                UnitPrice = itemMaster.ImunitPrice,
-                Width = itemMaster.Imwidth,
-                Length = itemMaster.Imlength,
-                Height = itemMaster.Imheight,
-                IsPrePack = itemMaster.ImisPrePack,
-                PrePack = itemMaster.ImprePackStyle
-            };
-            return model;
-        }
-
-        private ItemMaster ModelToData(MasterItemDto model)
-        {
-            var data = new ItemMaster
-            {
-                ItemMasterIdPk = model.ProductNumber,
-                Impack = model.PackSize,
-                Imdescription = model.Description,
-                ImimageData = !string.IsNullOrEmpty(model.ProductImage)
-                    ? Convert.FromBase64String(model.ProductImage)
-                    : null,
-                ImisHazardousMaterial = model.IsHazardousMaterial,
-                ImexpirationDate = DateTime.ParseExact(model.ExpirationDate,"MM/dd/yyyy", CultureInfo.InvariantCulture),
-                ImcostCenterCode = model.CostCenterCode,
-                ImunitPrice = model.UnitPrice,
-                Imwidth = model.Width,
-                Imlength = model.Length,
-                Imheight = model.Height,
-                ImisPrePack = model.IsPrePack,
-                ImprePackStyle = model.PrePack
-            };
-            return data;
         }
 
         // PUT: api/Master/5
@@ -134,14 +88,14 @@ namespace RXN.Assignment.Web.Controllers
 
         // POST: api/Master
         [HttpPost]
-        public async Task<IActionResult> PostItemMaster([FromBody] MasterItemDto model)
+        public async Task<IActionResult> PostItemMaster([FromBody] MasterItemDto item)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
-            }
+            }   
 
-            var itemMaster = ModelToData(model);
+            var itemMaster = ModelToData(item);
             _context.ItemMaster.Add(itemMaster);
             try
             {
@@ -159,33 +113,60 @@ namespace RXN.Assignment.Web.Controllers
                 }
             }
 
-            return CreatedAtAction("GetItemMaster", new { id = itemMaster.ItemMasterIdPk }, model);
+            return CreatedAtAction("GetItemMaster", new { id = itemMaster.ItemMasterIdPk }, item);
         }
 
-        // DELETE: api/Master/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteItemMaster([FromRoute] int id)
+        #region Helpers
+        private MasterItemDto DataToModel(ItemMaster itemMaster)
         {
-            if (!ModelState.IsValid)
+            var model = new MasterItemDto
             {
-                return BadRequest(ModelState);
-            }
+                ProductNumber = itemMaster.ItemMasterIdPk,
+                PackSize = itemMaster.Impack,
+                Description = itemMaster.Imdescription,
+                ProductImage = itemMaster.ImimageData != null
+                    ? Convert.ToBase64String(itemMaster.ImimageData, 0, itemMaster.ImimageData.Length)
+                    : null,
+                IsHazardousMaterial = itemMaster.ImisHazardousMaterial,
+                ExpirationDate = itemMaster.ImexpirationDate.ToString("MM/dd/yyyy"),
+                CostCenterCode = itemMaster.ImcostCenterCode.ToString("####-##-##"),
+                UnitPrice = itemMaster.ImunitPrice,
+                Width = itemMaster.Imwidth,
+                Length = itemMaster.Imlength,
+                Height = itemMaster.Imheight,
+                IsPrePack = itemMaster.ImisPrePack,
+                PrePack = itemMaster.ImprePackStyle
+            };
+            return model;
+        }
 
-            var itemMaster = await _context.ItemMaster.SingleOrDefaultAsync(m => m.ItemMasterIdPk == id);
-            if (itemMaster == null)
+        private ItemMaster ModelToData(MasterItemDto model)
+        {
+            var data = new ItemMaster
             {
-                return NotFound();
-            }
-
-            _context.ItemMaster.Remove(itemMaster);
-            await _context.SaveChangesAsync();
-
-            return Ok(itemMaster);
+                ItemMasterIdPk = model.ProductNumber,
+                Impack = model.PackSize,
+                Imdescription = model.Description,
+                ImimageData = !string.IsNullOrEmpty(model.ProductImage)
+                    ? Convert.FromBase64String(model.ProductImage)
+                    : null,
+                ImisHazardousMaterial = model.IsHazardousMaterial,
+                ImexpirationDate = DateTime.ParseExact(model.ExpirationDate, "MM/dd/yyyy", CultureInfo.InvariantCulture),
+                ImcostCenterCode = int.Parse(model.CostCenterCode.Replace("-", "")),
+                ImunitPrice = model.UnitPrice,
+                Imwidth = model.Width,
+                Imlength = model.Length,
+                Imheight = model.Height,
+                ImisPrePack = model.IsPrePack,
+                ImprePackStyle = model.PrePack
+            };
+            return data;
         }
 
         private bool ItemMasterExists(int id)
         {
             return _context.ItemMaster.Any(e => e.ItemMasterIdPk == id);
         }
+        #endregion
     }
 }
